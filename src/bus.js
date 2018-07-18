@@ -1,7 +1,10 @@
 import { Observable } from 'rxjs/Observable';
 import { filter } from 'rxjs/operators/filter';
 
-class Stream {
+
+
+
+class BusBelaz {
   emitter;
 
   constructor() {
@@ -25,4 +28,4 @@ class Stream {
   }
 }
 
-export default new Stream();
+export default new BusBelaz();
