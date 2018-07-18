@@ -2,8 +2,6 @@ import { Observable } from 'rxjs/Observable';
 import { filter } from 'rxjs/operators/filter';
 
 
-
-
 class BusBelaz {
   emitter;
 

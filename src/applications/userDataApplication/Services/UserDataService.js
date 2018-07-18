@@ -1,10 +1,15 @@
-import { BaseStore } from 'mobx-pack';
-import { observable } from 'mobx';
+import { observable, action } from 'mobx';
+import BaseService from '../BaseService';
 
-class UserDataService extends BaseStore {
+class UserDataService extends BaseService {
   config = {
-    bindAs: 'APP_SERVICE'
+    bindAs: 'USER_DATA_SERVICE'
   }
+
+  api = {
+    login: this.login,
+    logout: this.logout,
+  };
 
   @observable userId = null;
 
