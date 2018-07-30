@@ -41,10 +41,12 @@ span {
 }
 
 .controls {
-  position: absolute;
   background: #777777;
+  width: 100%;
   padding: 5px;
-  top: 50px;
-  left: 0;
-  z-index: 1;
+}
+
+.controls .info {
+  color: white;
+  display: inline-block;
 }
