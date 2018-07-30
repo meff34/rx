@@ -1,0 +1,28 @@
+[version]
+0.77.0
+
+[ignore]
+# node_modules
+.*/node_modules/findup/.*
+
+
+[include]
+# include node_modules for get typing of vendor libs
+node_modules/
+
+[libs]
+# (github)[https://github.com/flowtype/flow-typed]
+flow-typed
+
+[lints]
+
+[options]
+suppress_comment= \\(.\\|\n\\)*\\$FlowIgnore
+esproposal.decorators=ignore
+
+# extensions
+module.file_ext=.js
+module.file_ext=.jsx
+module.file_ext=.json
+module.file_ext=.scss
+module.name_mapper.extension='scss' -> 'empty/object'

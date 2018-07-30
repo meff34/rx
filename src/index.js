@@ -1,33 +1,57 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import * as mobx from 'mobx'
+// @flow
 
+// import './performance/busTest.sync';
+// import './performance/emitterTest.sync';
 
-import UserData from './applications/userDataApplication/SmartComponents/UserData';
-import userDataService from './applications/userDataApplication/Services/UserDataService';
-import Sidebar from './applications/sidebarApplication/SmartComponents/Sidebar';
-import sidebarService from './applications/sidebarApplication/Services/SidebarService';
-import tradingSignalsService from './applications/sidebarApplication/Services/TradingSignalsService';
+import bus from "./bus";
+import EventEmitter from "./EventEmitter";
 
-console.log(mobx)
+const busContainer = document.querySelector('#bus');
+const busCounterContainer = document.querySelector('#bus>.counter');
+const emitterContainer = document.querySelector('#eventEmitter');
+const emitterCounterContainer = document.querySelector('#eventEmitter>.counter');
 
+const speed = 1;
+let busRenderedItems = 0;
+let emitterRenderedItems = 0;
 
-Promise.all([
-  userDataService.start('main')
-]).then(() => {
-  ReactDOM.render(
-    <UserData />,
-    document.getElementById('app'),
-  );
+bus.read().subscribe(chunk => {
+  const span = document.createElement('span');
+  busContainer.appendChild(span);
+  busCounterContainer.textContent = `${++busRenderedItems} -- bus items`;
 });
 
-Promise.all([
-  sidebarService.start('main'),
-  tradingSignalsService.start('main')
-]).then(() => {
-  ReactDOM.render(
-    <Sidebar />,
-    document.getElementById('sidebar'),
-  );
+
+const emitter = new EventEmitter();
+
+emitter.addListener('stream', chunk => {
+  const span = document.createElement('span');
+  emitterContainer.appendChild(span);
+  emitterCounterContainer.textContent = `${++emitterRenderedItems} -- eventEmitter items`;
 });
 
+let intervalIds = [];
+
+const startTest = () => {
+  intervalIds = [
+    setInterval(() => {
+      bus.emit({type: 'stream', payload: Math.random()})
+    }, speed),
+    setInterval(() => {
+      emitter.emit('stream', {type: 'stream', payload: Math.random()})
+    }, speed),
+  ]
+}
+
+const stopTest = () => {
+  intervalIds.forEach(clearInterval);
+  intervalIds = [];
+}
+
+const pauser = document.querySelector('#pause');
+const resumer = document.querySelector('#resume');
+
+pauser.addEventListener('click', stopTest)
+resumer.addEventListener('click', startTest)
+
+startTest();

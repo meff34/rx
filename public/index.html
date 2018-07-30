@@ -3,43 +3,23 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="theme-color" content="#000000">
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
-    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
 
     <title>BusBelaz MVP</title>
 
-    <style>
-      * {
-        box-sizing: border-box;
-      }
+    <link rel="stylesheet" href="./style.css">
 
-      body {
-        display: flex;
-        flex-flow: row nowrap;
-        align-items: stretch;
-        margin: 0;
-        padding: 0;
-        height: 100vh;
-      }
-
-      #app, #sidebar {
-        padding: 1.5em;
-      }
-
-      #app {
-        flex: 2 0 auto;
-        background-color: #ebebeb;
-      }
-
-      #sidebar {
-        flex: 1 0 auto;
-        background-color: #999999;
-      }
-    </style>
   </head>
   <body>
-    <div id="app"></div>
-    <div id="sidebar"></div>
+    <div class="controls">
+      <button id="pause">pause</button>
+      <button id="resume">resume</button>
+    </div>
+    <div id="bus" class="block">
+      <div class="counter"></div>
+    </div>
+    <div id="eventEmitter" class="block">
+      <div class="counter"></div>
+    </div>
+
   </body>
 </html>

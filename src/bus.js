@@ -1,29 +1,34 @@
-import { Observable } from 'rxjs/Observable';
-import { filter } from 'rxjs/operators/filter';
+// @flow
 
+import { Observable, Subject, /*from*/ } from 'rxjs';
+// import { filter, merge } from 'rxjs/operators';
+import type { EventTypes, Event } from './typings.js';
 
-class BusBelaz {
-  emitter;
+export class Bus {
+  observable: Observable;
+  subject: Subject;
+  defaultCacheSize: number;
+  cacheSizes: { [EventTypes]: number };
+  cache: { [EventTypes]: Array<Event> };
 
-  constructor() {
+  constructor(): void {
+    this.defaultCacheSize = 5;
+    this.cacheSizes = {};
+    this.cache = {};
+
+    this.subject = new Subject({type: 'bus is running'});
+
     this.observable = Observable
-      .create(e => this.emitter = e)
-
-    this.observable.subscribe();
+      .create((e: Observer): void => { this.observer = e; });
   }
 
-  readAll() {
-    return this.observable;
+  read(eventType: EventTypes, withCache: boolean = false): Observable {
+    return this.subject;
   }
 
-  read(neededType) {
-    return this.observable
-      .pipe(filter(({ type }) => neededType === type))
-  }
-
-  push(...arg) {
-    this.emitter.next(...arg);
+  emit(event: Event): void {
+    this.subject.next(event);
   }
 }
 
-export default new BusBelaz();
+export default new Bus();
