@@ -1,6 +1,6 @@
 // @flow
 
-import './performance/renderer';
+import './renderablePerformance/renderer';
 
 import syncBusTest from './performance/busTest.sync';
 import syncEETest from './performance/emitterTest.sync';
