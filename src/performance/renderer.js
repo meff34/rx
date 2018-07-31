@@ -3,94 +3,117 @@
 import { Bus } from '../bus';
 import EventEmitter from '../EventEmitter';
 
+const colors = ['green', 'blue', 'red', 'yellow', 'rebeccapurple'];
+
 const $EE = document.querySelector('#startEventEmitter');
 const $bus = document.querySelector('#startBus');
-const info = document.querySelector('.info');
-const body = document.querySelector('body');
+const $stop = document.querySelector('#stopAsyncTest');
+const $info = document.querySelector('.info');
+const $body = document.querySelector('body');
+const $input = document.querySelector('#asyncInput');
+const $streamsCount = document.querySelector('select');
+const $interval = document.querySelector('#interval');
 
 if ($bus) $bus.addEventListener('click', initiateBusTest);
 if ($EE) $EE.addEventListener('click', initiateEETest);
+if ($stop) $stop.addEventListener('click', setInitialState);
 
 
-const itemsLimit = 1000;
-const interval = 10;
+let itemsLimit = 1000;
+let interval = 10;
 let renderedItems = 0;
-let intervalId;
+let intervalIds = [];
 let container;
 let profiler;
 let currentTestSuite = '';
+let streamsCount;
 
 const calculateTextContent =
   rendered =>
-    `${rendered}/${itemsLimit} (${(rendered / itemsLimit * 100).toFixed(2)}%) items is rendered, wait please...`;
+    `${rendered}/${itemsLimit * streamsCount} (${(rendered / itemsLimit  * streamsCount * 100).toFixed(2)}%) items is rendered, wait please...`;
 
 function initiateBusTest() {
-  dropState();
+  setInitialState();
 
   currentTestSuite = 'BusBelaz';
   container = document.createElement('div');
-  if (body) body.appendChild(container);
+  if ($body) $body.appendChild(container);
 
+  streamsCount = Number($streamsCount.value);
+  interval = Number($interval.value);
   const bus = new Bus();
 
-  bus.read().subscribe(() => {
+  bus.read().subscribe(({ payload }) => {
     renderedItems++;
 
-    const span = document.createElement('span');
-    if (container) container.appendChild(span);
+    insertSpan(container, payload);
 
-    if (info) info.textContent = calculateTextContent(renderedItems);
+    if ($info) $info.textContent = calculateTextContent(renderedItems);
 
-    if (renderedItems >= itemsLimit) {
+    if (renderedItems >= itemsLimit * streamsCount) {
       finishTest(container);
     }
   })
 
   profiler = performance.now()
-  intervalId = setInterval(() => {
-    bus.emit({type: 'stream', payload: Math.random()})
-  }, interval)
+  intervalIds = Array
+    .from({ length: streamsCount })
+    .map((_, i) => setInterval(() => {
+      bus.emit({type: 'stream', payload: i})
+    }, interval));
 }
 
 function initiateEETest() {
-  dropState();
+  setInitialState();
 
   currentTestSuite = 'EventEmitter';
   container = document.createElement('div');
-  if (body) body.appendChild(container);
+  if ($body) $body.appendChild(container);
 
   const eventEmitter = new EventEmitter();
 
-  eventEmitter.addListener('stream', () => {
+  streamsCount = Number($streamsCount.value);
+  interval = Number($interval.value);
+  eventEmitter.addListener('stream', ({ payload }) => {
     renderedItems++;
 
-    const span = document.createElement('span');
-    if (container) container.appendChild(span);
+    insertSpan(container, payload);
 
-    if (info) info.textContent = calculateTextContent(renderedItems);
+    if ($info) $info.textContent = calculateTextContent(renderedItems);
 
-    if (renderedItems >= itemsLimit) {
+    if (renderedItems >= itemsLimit * streamsCount) {
       finishTest(container);
     }
   })
 
   profiler = performance.now()
-  intervalId = setInterval(() => {
-    eventEmitter.emit('stream', {type: 'stream', payload: Math.random()})
-  }, interval)
+  intervalIds = Array
+    .from({ length: streamsCount })
+    .map((_, i) => setInterval(() => {
+      eventEmitter.emit('stream', {type: 'stream', payload: i})
+    }, interval));
 }
 
 function finishTest(container) {
-  if (info) info.textContent = `rendering ${itemsLimit} nodes througt ${currentTestSuite} took ${Math.ceil(performance.now() - Number(profiler))}ms`
-  if (intervalId) clearInterval(intervalId);
+  if ($info) $info.textContent = `rendering ${itemsLimit * streamsCount} nodes througt ${currentTestSuite} took ${Math.ceil(performance.now() - Number(profiler))}ms`
+  intervalIds.forEach(clearInterval);
 }
 
-function dropState() {
-  if (intervalId) clearInterval(intervalId);
-  intervalId = null;
+function setInitialState() {
+  intervalIds.forEach(clearInterval);
+  intervalIds = [];
   if (container) container.remove();
   container = null;
   renderedItems = 0;
   profiler = undefined;
   currentTestSuite = '';
+  interval = 10;
+  itemsLimit = Number($input.value) || 1000;
+}
+
+function insertSpan(container, streamNumber) {
+  const span = document.createElement('span');
+  span.classList.add('item');
+  span.style.backgroundColor = colors[streamNumber];
+  container.appendChild(span);
 }
