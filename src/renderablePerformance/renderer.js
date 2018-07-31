@@ -30,7 +30,7 @@ let streamsCount;
 
 const calculateTextContent =
   rendered =>
-    `${rendered}/${itemsLimit * streamsCount} (${(rendered / itemsLimit  * streamsCount * 100).toFixed(2)}%) items is rendered, wait please...`;
+    `${rendered}/${itemsLimit * streamsCount} (${(rendered / (itemsLimit  * streamsCount) * 100).toFixed(2)}%) items is rendered, wait please...`;
 
 function initiateBusTest() {
   setInitialState();
