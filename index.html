@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+  <title>BusBelaz MVP</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+  <div class="controls">
+    <span class="label">Sync test (runs at console):</span>
+  </div>
+  <div class="controls">
+    <input type="number" id="syncInput" placeholder="iterations for sync test">
+    <button id="syncBusTest">test BusBelaz synchronously</button>
+    <button id="syncEETest">test EventEmitter synchronously</button>
+  </div>
+  <br/>
+  <div class="controls">
+    <span class="label">Async test (each stream emits one event in
+      <input id="interval" type="number" value="10" />ms):</span>
+  </div>
+  <div class="controls">
+    <input type="number" id="asyncInput" value="1000">
+    <span>items for (for each of</span>
+    <select name="streams" id="streams">
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+    </select>
+    <span>stream)</span>
+    <button id="startBus">test rendering through BusBelaz</button>
+    <button id="startEventEmitter">test rendering through EventEmitter</button>
+    <button id="stopAsyncTest">stop</button>
+    <div class="info"></div>
+    <script type="text/javascript" src="/static/js/main.79719b1e.js"></script>
+  </div>
+</body>
+
+</html>
