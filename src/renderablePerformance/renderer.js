@@ -2,6 +2,7 @@
 
 import { Bus } from '../bus';
 import EventEmitter from '../EventEmitter';
+import mock from '../mock';
 
 const colors = ['green', 'blue', 'red', 'yellow', 'rebeccapurple'];
 
@@ -46,7 +47,7 @@ function initiateBusTest() {
   bus.read().subscribe(({ payload }) => {
     renderedItems++;
 
-    insertSpan(container, payload);
+    insertSpan(container, payload.id);
 
     if ($info) $info.textContent = calculateTextContent(renderedItems);
 
@@ -59,7 +60,7 @@ function initiateBusTest() {
   intervalIds = Array
     .from({ length: streamsCount })
     .map((_, i) => setInterval(() => {
-      bus.emit({type: 'stream', payload: i})
+      bus.emit({type: 'stream', payload: mock(i)})
     }, interval));
 }
 
@@ -77,7 +78,7 @@ function initiateEETest() {
   eventEmitter.addListener('stream', ({ payload }) => {
     renderedItems++;
 
-    insertSpan(container, payload);
+    insertSpan(container, payload.id);
 
     if ($info) $info.textContent = calculateTextContent(renderedItems);
 
@@ -90,7 +91,7 @@ function initiateEETest() {
   intervalIds = Array
     .from({ length: streamsCount })
     .map((_, i) => setInterval(() => {
-      eventEmitter.emit('stream', {type: 'stream', payload: i})
+      eventEmitter.emit('stream', {type: 'stream', payload: mock(i)})
     }, interval));
 }
 
