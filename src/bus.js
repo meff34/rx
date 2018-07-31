@@ -1,33 +1,34 @@
 // @flow
 
-import { Observable, Subject, /*from*/ } from 'rxjs';
-// import { filter, merge } from 'rxjs/operators';
-import type { EventTypes, Event } from './typings.js';
+import { Subject, merge } from 'rxjs';
+
+type EventType = 'trading_signals:add' | 'trading_signals:remove'
+
+type Event = {
+  type: EventType,
+  payload: *,
+}
 
 export class Bus {
   observable: Observable;
   subject: Subject;
   defaultCacheSize: number;
-  cacheSizes: { [EventTypes]: number };
-  cache: { [EventTypes]: Array<Event> };
+  streams: Map<EventType, Subject> = new Map();
 
-  constructor(): void {
-    this.defaultCacheSize = 5;
-    this.cacheSizes = {};
-    this.cache = {};
-
-    this.subject = new Subject({type: 'bus is running'});
-
-    this.observable = Observable
-      .create((e: Observer): void => { this.observer = e; });
+  select(type: EventType): Subject {
+    return this.streams.get(type);
   }
 
-  read(eventType: EventTypes, withCache: boolean = false): Observable {
-    return this.subject;
+  read() {
+    return merge(...this.streams.values());
   }
 
   emit(event: Event): void {
-    this.subject.next(event);
+    if (!this.streams.has(event.type)) {
+      this.streams.set(event.type, new Subject());
+    }
+
+    this.streams.get(event.type).next(event);
   }
 }
 

@@ -19,7 +19,7 @@ stream.subscribe(chunk => {
 })
 
 for (let i = 0; i < iterations; i++) {
-  bus.emit({type: 'stream', payload: mock(i)});
+  bus.emit({type: 'trading_signals:add', payload: mock(i)});
 }
 
 console.log('now bus Storage1 have', Storage1.length, 'items');
