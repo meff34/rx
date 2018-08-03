@@ -9,7 +9,7 @@ export default () => {
 
   const profiler = performance.now();
 
-  const stream = bus.read();
+  const stream = bus.getMainStream();
 
   stream.subscribe(chunk => {
     Storage1 = [...Storage1, Object.assign({}, chunk)];
@@ -20,7 +20,7 @@ export default () => {
   })
 
   for (let i = 0; i < iterations; i++) {
-    bus.emit({type: 'stream', payload: mock(i)});
+    bus.emit({type: 'event', payload: mock(i)});
   }
 
   console.log('now BusBelaz Storage1 have', Storage1.length, 'items');

@@ -56,5 +56,5 @@ export default id => ({
   "favoriteFruit": "banana"
 })
 
-export const iterations = 40000;
+export const iterations = 30000;
 

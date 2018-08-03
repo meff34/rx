@@ -44,7 +44,7 @@ function initiateBusTest() {
   interval = Number($interval.value);
   const bus = new Bus();
 
-  bus.read().subscribe(({ payload }) => {
+  bus.getMainStream().subscribe(({ payload }) => {
     renderedItems++;
 
     insertSpan(container, payload.id);
@@ -60,7 +60,7 @@ function initiateBusTest() {
   intervalIds = Array
     .from({ length: streamsCount })
     .map((_, i) => setInterval(() => {
-      bus.emit({type: 'stream', payload: mock(i)})
+      bus.emit({type: `stream${i}`, payload: mock(i)})
     }, interval));
 }
 

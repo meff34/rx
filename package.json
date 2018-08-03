@@ -2,7 +2,7 @@
   "name": "rx",
   "version": "0.1.0",
   "private": true,
-  "homepage" : "http://meff34.github.io/rx",
+  "homepage": "http://meff34.github.io/rx",
   "dependencies": {
     "autoprefixer": "7.1.6",
     "babel-core": "6.26.0",
